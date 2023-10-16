@@ -1,3 +1,0 @@
-- [ ] User Registration
-- [ ] User login
-- [ ] Chat creation
