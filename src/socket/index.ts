@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 
-import userHandler from "./user.handler";
-import { NextFunction } from "express";
+import chatHandler from "./chat.handler";
+import { authMid } from "../middleware";
 
 export default function (server: any) {
   const io = new Server(server, {
@@ -12,13 +12,11 @@ export default function (server: any) {
   });
 
   const onConnection = (socket: Socket) => {
-    userHandler(io, socket);
-
-    // io.use((socket: Socket, next) => {
-    //   console.log(socket.handshake);
-    //   next();
-    // });
+    chatHandler(io, socket);
   };
 
-  io.on("connect", onConnection);
+  io.use((socket: Socket, next) => authMid(io, socket, next)).on(
+    "connect",
+    onConnection
+  );
 }
